@@ -7,39 +7,42 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.milan.warfare.components.PositionComponent;
-import com.milan.warfare.components.VelocityComponent;
-import com.milan.warfare.systems.MovementSystem;
+import com.milan.warfare.factories.SoldierFactory;
+import com.milan.warfare.systems.SoldierSystem;
+
 
 public class Main extends ApplicationAdapter {
-   
-   private Engine engine;
+    private Engine engine;
+    private SoldierFactory soldierFactory;
+    private SpriteBatch batch;
 
     @Override
     public void create() {
         engine = new Engine();
+        batch = new SpriteBatch();
+        soldierFactory = new SoldierFactory();
 
-        engine.addSystem(new MovementSystem());
 
-        Entity player = new Entity();
-        PositionComponent position = new PositionComponent();
-        position.x = 0;
-        position.y = 0;
+        engine.addSystem(new SoldierSystem(batch));
 
-        VelocityComponent velocity = new VelocityComponent();
-        velocity.x = 50;
-        velocity.y = 0;
+        Entity soldier = soldierFactory.createSoldier(0, 0);
 
-        player.add(position);
-        player.add(velocity);
-
-        engine.addEntity(player);
+        engine.addEntity(soldier);
     }
 
     @Override
     public void render() {
         float delta = Gdx.graphics.getDeltaTime();
+
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         engine.update(delta);
     }
 
+    @Override
+    public void dispose(){
+        soldierFactory.dispose();
+        batch.dispose();
+    }
 }
