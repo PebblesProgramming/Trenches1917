@@ -35,7 +35,7 @@ public class SoldierSystem extends IteratingSystem {
         batch.draw(textures.upperBody, position.x, position.y);
 
         position.x += velocity.x * deltaTime;
-        position.y += velocity.y * deltaTime;
+        // position.y += velocity.y * deltaTime; 
 
         System.out.println(command.command);
     }
